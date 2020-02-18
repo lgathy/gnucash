@@ -926,6 +926,9 @@ public class GnucashFileImpl implements GnucashFile {
 		if (latestQuote == null) {
 			return null;
 		}
+		if (factor == null) {
+			return latestQuote;
+		}
 		return factor.multiply(latestQuote);
 	}
 
