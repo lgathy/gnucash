@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashSet;
@@ -389,17 +390,17 @@ public class GnucashInvoiceImpl implements GnucashInvoice {
 	/**
 	 * @see GnucashInvoice#getDatePosted()
 	 */
-	protected LocalDateTime datePosted;
+	protected ZonedDateTime datePosted;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public LocalDateTime getDatePosted() {
+	public ZonedDateTime getDatePosted() {
 		if (datePosted == null) {
 			String s = getJwsdpPeer().getInvoiceOpened().getTsDate();
 			try {
 				//"2001-09-18 00:00:00 +0200"
-				datePosted =LocalDateTime.parse(s, DATEOPENEDFORMAT);
+				datePosted =ZonedDateTime.parse(s, DATEOPENEDFORMAT);
 			}
 			catch (Exception e) {
 				IllegalStateException ex = new IllegalStateException(

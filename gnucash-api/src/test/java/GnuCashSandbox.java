@@ -1,3 +1,4 @@
+import java.time.ZonedDateTime;
 import org.gnucash.numbers.FixedPointNumber;
 import org.gnucash.read.GnucashAccount;
 import org.gnucash.read.GnucashTransaction;
@@ -38,7 +39,7 @@ public class GnuCashSandbox {
 		GnucashWritableTransaction writableTransaction = gnucashFile.createWritableTransaction();
 		writableTransaction.setDescription("check");
 		writableTransaction.setCurrencyID("EUR");
-		writableTransaction.setDateEntered(LocalDateTime.now());
+		writableTransaction.setDateEntered(ZonedDateTime.now());
 		GnucashWritableTransactionSplit writingSplit = writableTransaction.createWritingSplit(gnucashFile.getAccountByName("Root Account::Income::Bonus"));
 		writingSplit.setValue(new FixedPointNumber(100));
 		writingSplit.setDescription("descr");

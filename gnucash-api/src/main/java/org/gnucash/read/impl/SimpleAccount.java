@@ -258,7 +258,7 @@ public abstract class SimpleAccount implements GnucashAccount {
 
 		for (Object element : getTransactionSplits()) {
 			GnucashTransactionSplit split = (GnucashTransactionSplit) element;
-			if (date == null || split.getTransaction().getDatePosted().isBefore(date.atStartOfDay())) {
+			if (date == null || split.getTransaction().getDatePosted().toLocalDateTime().isBefore(date.atStartOfDay())) {
 				if (lastSplit == null || split.getTransaction().getDatePosted().isAfter(lastSplit.getTransaction().getDatePosted())) {
 					lastSplit = split;
 				}
@@ -499,7 +499,7 @@ public abstract class SimpleAccount implements GnucashAccount {
 
 			if (date != null
 					&&
-					split.getTransaction().getDatePosted().isAfter(date.atStartOfDay())) {
+					split.getTransaction().getDatePosted().toLocalDateTime().isAfter(date.atStartOfDay())) {
 				if (after != null) {
 					after.add(split);
 				}

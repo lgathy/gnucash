@@ -20,6 +20,7 @@ package org.gnucash.write;
 
 import java.time.LocalDateTime;
 
+import java.time.ZonedDateTime;
 import org.gnucash.numbers.FixedPointNumber;
 import org.gnucash.read.GnucashInvoice;
 import org.gnucash.read.GnucashJob;
@@ -49,7 +50,7 @@ public interface GnucashWritableInvoice extends GnucashInvoice {
 
 	void setJob(GnucashJob job);
 
-	void setDatePosted(LocalDateTime d);
+	void setDatePosted(ZonedDateTime d);
 
 	void setDatePosted(String d) throws java.text.ParseException;
 

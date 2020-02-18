@@ -517,7 +517,7 @@ public class GnucashAccountWritingImpl extends GnucashAccountImpl implements Gnu
 
 		for (Object element : getTransactionSplits()) {
 			GnucashTransactionSplit split = (GnucashTransactionSplit) element;
-			LocalDateTime whenHappened = split.getTransaction().getDatePosted();
+			LocalDateTime whenHappened = split.getTransaction().getDatePosted().toLocalDateTime();
 			if (!whenHappened.isBefore(to.atStartOfDay())) {
 				continue;
 			}

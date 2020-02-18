@@ -11,6 +11,7 @@
 package org.gnucash.read;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 
 import org.gnucash.numbers.FixedPointNumber;
@@ -50,7 +51,7 @@ public interface GnucashInvoice extends Comparable<GnucashInvoice> {
 	/**
 	 *
 	 * @return the content of the invoice
-	 * @see ${@link GnucashInvoiceEntry}
+	 * @see {@link GnucashInvoiceEntry}
 	 */
 	Collection<GnucashInvoiceEntry> getEntries();
 
@@ -67,7 +68,7 @@ public interface GnucashInvoice extends Comparable<GnucashInvoice> {
 	/**
 	 * @return the date when this transaction hapened.
 	 */
-	LocalDateTime getDatePosted();
+	ZonedDateTime getDatePosted();
 
 	/**
 	 * @return the date when this transaction hapened.

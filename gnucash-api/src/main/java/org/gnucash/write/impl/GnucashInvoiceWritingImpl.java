@@ -19,6 +19,7 @@
 package org.gnucash.write.impl;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -679,9 +680,9 @@ public class GnucashInvoiceWritingImpl extends GnucashInvoiceImpl implements Gnu
 	}
 
 	/**
-	 * @see GnucashWritableInvoice#setDatePosted(LocalDateTime)
+	 * @see GnucashWritableInvoice#setDatePosted(ZonedDateTime)
 	 */
-	public void setDatePosted(final LocalDateTime d) {
+	public void setDatePosted(final ZonedDateTime d) {
 
 		atemptChange();
 
@@ -700,7 +701,7 @@ public class GnucashInvoiceWritingImpl extends GnucashInvoiceImpl implements Gnu
 	 * @see GnucashWritableInvoice#setDatePosted(java.lang.String)
 	 */
 	public void setDatePosted(final String d) throws java.text.ParseException {
-		setDatePosted(LocalDateTime.parse(d, DATEOPENEDFORMAT));
+		setDatePosted(ZonedDateTime.parse(d, DATEOPENEDFORMAT));
 	}
 
 	/**

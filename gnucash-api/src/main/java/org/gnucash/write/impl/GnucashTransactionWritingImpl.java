@@ -300,9 +300,9 @@ public class GnucashTransactionWritingImpl extends GnucashTransactionImpl implem
 	}
 
 	/**
-	 * @see GnucashWritableTransaction#setDatePosted(LocalDateTime)
+	 * @see GnucashWritableTransaction#setDatePosted(ZonedDateTime)
 	 */
-	public void setDatePosted(final LocalDateTime datePosted) {
+	public void setDatePosted(final ZonedDateTime datePosted) {
 		this.datePosted = datePosted;
 		getJwsdpPeer().getTrnDatePosted().setTsDate(DATE_ENTERED_FORMAT.format(datePosted));
 		getWritingFile().setModified(true);
