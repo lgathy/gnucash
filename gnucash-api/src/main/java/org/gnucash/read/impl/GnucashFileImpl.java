@@ -1054,11 +1054,11 @@ public class GnucashFileImpl implements GnucashFile {
 		long start = System.currentTimeMillis();
 
 		// determine if it's gzipped by the magic bytes
+		in = new BufferedInputStream(in);
 		byte[] magic = new byte[2];
 		in.mark(2);
 		in.read(magic);
 		in.reset();
-		in = new BufferedInputStream(in);
 		if (magic[0] == 31 && magic[1] == -117) {
 			in = new GZIPInputStream(in);
 		}
