@@ -67,7 +67,7 @@
 						<xs:element name="cmdty_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
 						<xs:element name="cmdty_xcode" type="xs:string" minOccurs="0" maxOccurs="1"/>
 						<xs:element name="cmdty_fraction" type="xs:int" minOccurs="0" maxOccurs="1"/>
-
+						<xs:element name="cmdty_slots" type="slots_type" minOccurs="0" maxOccurs="1"/>
 						<!-- added for Gnucash V2.x -->
 						<xs:element name="cmdty_get_quotes" type="xs:string" minOccurs="0" maxOccurs="1"/>
 						<xs:element name="cmdty_quote_source" type="xs:string" minOccurs="0" maxOccurs="1"/>
@@ -916,7 +916,7 @@
 				</xs:element>
 				<xs:element name="act_code" type="xs:string" minOccurs="0" maxOccurs="1"/>
 				<xs:element name="act_description" type="xs:string" minOccurs="0" maxOccurs="1"/>
-				<xs:element type="slots_type" name="act_slots" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="act_slots" type="slots_type" minOccurs="0" maxOccurs="1"/>
 				<xs:element name="act_parent" minOccurs="0" maxOccurs="1">
 					<xs:complexType>
 						<xs:simpleContent>
