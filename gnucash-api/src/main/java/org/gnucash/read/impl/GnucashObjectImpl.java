@@ -211,16 +211,16 @@ public class GnucashObjectImpl implements GnucashObject {
 		mySlots = slots;
 
 		// we have an xsd-problem saving empty slots so we add a dummy-value
-		if (slots.getSlot().isEmpty()) {
-			ObjectFactory objectFactory = new ObjectFactory();
-			Slot slot = objectFactory.createSlot();
-			slot.setSlotKey("dummy");
-			SlotValue value = objectFactory.createSlotValue();
-			value.setType("string");
-			value.getContent().add("dummy");
-			slot.setSlotValue(value);
-			slots.getSlot().add(slot);
-		}
+//		if (slots.getSlot().isEmpty()) {
+//			ObjectFactory objectFactory = new ObjectFactory();
+//			Slot slot = objectFactory.createSlot();
+//			slot.setSlotKey("dummy");
+//			SlotValue value = objectFactory.createSlotValue();
+//			value.setType("string");
+//			value.getContent().add("dummy");
+//			slot.setSlotValue(value);
+//			slots.getSlot().add(slot);
+//		}
 
 		// <<insert code to react further to this change here
 		PropertyChangeSupport propertyChangeFirer = getPropertyChangeSupport();

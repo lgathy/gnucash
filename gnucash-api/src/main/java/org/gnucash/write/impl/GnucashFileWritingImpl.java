@@ -610,10 +610,10 @@ public class GnucashFileWritingImpl extends GnucashFileImpl implements GnucashWr
 		public void endDocument() throws SAXException {
 
 			try {
-				writer.write("\n\n"
-						+ "<!-- Local variables: -->\n"
-						+ "<!-- mode: xml        -->\n"
-						+ "<!-- End:             -->\n");
+				writer.write("\n\n");
+//						+ "<!-- Local variables: -->\n"
+//						+ "<!-- mode: xml        -->\n"
+//						+ "<!-- End:             -->\n");
 			}
 			catch (IOException e) {
 				LOGGER.error("Problem in WritingContentHandler", e);
