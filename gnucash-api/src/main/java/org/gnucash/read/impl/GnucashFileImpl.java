@@ -1000,6 +1000,11 @@ public class GnucashFileImpl implements GnucashFile {
 		loadFile(pFile);
 	}
 
+	public GnucashFileImpl(InputStream inputStream) throws IOException {
+		super();
+		load(inputStream);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -1030,8 +1035,6 @@ public class GnucashFileImpl implements GnucashFile {
 	 */
 	protected void loadFile(final File pFile) throws IOException {
 
-		long start = System.currentTimeMillis();
-
 		if (pFile == null) {
 			throw new IllegalArgumentException(
 					"null not allowed for field this.file");
@@ -1044,21 +1047,20 @@ public class GnucashFileImpl implements GnucashFile {
 
 		setFile(pFile);
 
-		InputStream in = new FileInputStream(pFile);
-		if (pFile.getName().endsWith(".gz")) {
-			in = new BufferedInputStream(in);
-			in = new GZIPInputStream(in);
-		} else {
-			// determine if it's gzipped by the magic bytes
-			byte[] magic = new byte[2];
-			in.read(magic);
-			in.close();
+		load(new FileInputStream(pFile));
+	}
 
-			in = new FileInputStream(pFile);
-			in = new BufferedInputStream(in);
-			if (magic[0] == 31 && magic[1] == -117) {
-				in = new GZIPInputStream(in);
-			}
+	protected void load(InputStream in) throws IOException {
+		long start = System.currentTimeMillis();
+
+		// determine if it's gzipped by the magic bytes
+		byte[] magic = new byte[2];
+		in.mark(2);
+		in.read(magic);
+		in.reset();
+		in = new BufferedInputStream(in);
+		if (magic[0] == 31 && magic[1] == -117) {
+			in = new GZIPInputStream(in);
 		}
 
 		NamespaceRemovererReader reader = new NamespaceRemovererReader(new InputStreamReader(in, "utf-8"));
