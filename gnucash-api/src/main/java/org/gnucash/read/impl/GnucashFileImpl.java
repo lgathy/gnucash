@@ -28,10 +28,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -365,7 +367,7 @@ public class GnucashFileImpl implements GnucashFile {
 	 * @see {@link GnucashFile#getLatestPrice(String, String)}
 	 */
 	public FixedPointNumber getLatestPrice(final String pCmdtySpace, final String pCmdtyId) {
-		return getLatestPrice(pCmdtySpace, pCmdtyId, 0);
+		return getLatestPrice(pCmdtySpace, pCmdtyId, 0, new HashSet<>());
 	}
 
 	/**
@@ -641,7 +643,7 @@ public class GnucashFileImpl implements GnucashFile {
 	 * @param pRootElement the root-element of the Gnucash-file
 	 */
 	@SuppressWarnings("unchecked")
-	private void loadPriceDatabase(final GncV2 pRootElement) {
+	protected void loadPriceDatabase(final GncV2 pRootElement) {
 		boolean noPriceDB = true;
 		List<Object> bookElements = pRootElement.getGncBook().getBookElements();
 		for (Object bookElement : bookElements) {
@@ -729,7 +731,8 @@ public class GnucashFileImpl implements GnucashFile {
 	@SuppressWarnings("unchecked")
 	private FixedPointNumber getLatestPrice(final String pCmdtySpace,
 			final String pCmdtyId,
-			final int depth) {
+			final int depth,
+			Set<String> excludedPriceIds) {
 		if (pCmdtySpace == null) {
 			throw new IllegalArgumentException("null parameter 'pCmdtySpace' "
 					+ "given");
@@ -757,38 +760,39 @@ public class GnucashFileImpl implements GnucashFile {
 								+ " there may be a problem with JWSDP");
 						continue;
 					}
+					String priceId = priceQuote.getPriceId().getValue();
 					if (priceQuote.getPriceCurrency() == null) {
 						LOGGER.warn("gnucash-file contains price-quotes"
 								+ " with no currency id='"
-								+ priceQuote.getPriceId().getValue()
+								+ priceId
 								+ "'");
 						continue;
 					}
 					if (priceQuote.getPriceCurrency().getCmdtyId() == null) {
 						LOGGER.warn("gnucash-file contains price-quotes"
 								+ " with no currency-id id='"
-								+ priceQuote.getPriceId().getValue()
+								+ priceId
 								+ "'");
 						continue;
 					}
 					if (priceQuote.getPriceCurrency().getCmdtySpace() == null) {
 						LOGGER.warn("gnucash-file contains price-quotes"
 								+ " with no currency-namespace id='"
-								+ priceQuote.getPriceId().getValue()
+								+ priceId
 								+ "'");
 						continue;
 					}
 					if (priceQuote.getPriceTime() == null) {
 						LOGGER.warn("gnucash-file contains price-quotes"
 								+ " with no timestamp id='"
-								+ priceQuote.getPriceId().getValue()
+								+ priceId
 								+ "'");
 						continue;
 					}
 					if (priceQuote.getPriceValue() == null) {
 						LOGGER.warn("gnucash-file contains price-quotes"
 								+ " with no value id='"
-								+ priceQuote.getPriceId().getValue()
+								+ priceId
 								+ "'");
 						continue;
 					}
@@ -819,31 +823,35 @@ public class GnucashFileImpl implements GnucashFile {
                         continue;
                     }*/
 
-					if (!priceQuote.getPriceCurrency()
-							.getCmdtySpace().equals("ISO4217")) {
+					if (!priceQuote.getPriceCurrency().getCmdtySpace().equals("ISO4217")) {
 						if (depth > maxRecursionDepth) {
 							LOGGER.warn("ignoring price-quote that is not in an"
 									+ " ISO4217 -currency but in '"
 									+ priceQuote.getPriceCurrency().getCmdtyId());
 							continue;
 						}
-						factor = getLatestPrice(priceQuote.getPriceCurrency()
-								.getCmdtySpace(), priceQuote.getPriceCurrency()
-								.getCmdtyId(), depth + 1);
-					} else {
-						if (!priceQuote.getPriceCurrency()
-								.getCmdtyId().equals(getDefaultCurrencyID())) {
-							if (depth > maxRecursionDepth) {
-								LOGGER.warn("ignoring price-quote that is not in "
-										+ getDefaultCurrencyID() + " "
-										+ "but in  '"
-										+ priceQuote.getPriceCurrency().getCmdtyId());
-								continue;
-							}
-							factor = getLatestPrice(priceQuote.getPriceCurrency()
-									.getCmdtySpace(), priceQuote.getPriceCurrency()
-									.getCmdtyId(), depth + 1);
+						HashSet<String> stack = new HashSet<>(excludedPriceIds);
+						stack.add(priceId);
+						factor = getLatestPrice(
+								priceQuote.getPriceCurrency().getCmdtySpace(),
+								priceQuote.getPriceCurrency().getCmdtyId(),
+								depth + 1,
+								stack);
+					} else if (!priceQuote.getPriceCurrency().getCmdtyId().equals(getDefaultCurrencyID())) {
+						if (depth > maxRecursionDepth) {
+							LOGGER.warn("ignoring price-quote that is not in "
+									+ getDefaultCurrencyID() + " "
+									+ "but in  '"
+									+ priceQuote.getPriceCurrency().getCmdtyId());
+							continue;
 						}
+						HashSet<String> stack = new HashSet<>(excludedPriceIds);
+						stack.add(priceId);
+						factor = getLatestPrice(
+								priceQuote.getPriceCurrency().getCmdtySpace(),
+								priceQuote.getPriceCurrency().getCmdtyId(),
+								depth + 1,
+								stack);
 					}
 
 					Date date = PRICEQUOTEDATEFORMAT.parse(
